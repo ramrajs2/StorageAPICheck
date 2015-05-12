@@ -25,14 +25,23 @@
         android:layout_below="@+id/btn_check_all_apis"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:onClick="copyFileFromAssets" />
+        android:onClick="copyFileFromAssetsToAppDataPath" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_copy_image_inaccessible_path"
+        android:id="@+id/btn_copy_to_invalid_path"
+        android:layout_below="@+id/btn_copy_image"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="copyFileFromAssetsToInaccessiblePath" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="clear"
         android:id="@+id/button"
         android:onClick="clearResults"
-        android:layout_below="@+id/btn_copy_image"
+        android:layout_below="@+id/btn_copy_to_invalid_path"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
 

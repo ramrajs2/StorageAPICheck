@@ -8,7 +8,6 @@ import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -114,10 +113,10 @@ public class MainActivity extends ActionBarActivity {
     }
 
     // This method will be invoked when "Copy File" button is clicked in the app.
-    public void copyFileFromAssets(View view) {
+    public void copyFileFromAssetsToAppDataPath(View view) {
         clearResults(null);
-        mApiChecker.check_write_file((TextView) findViewById(R.id.txt_results),
-                (ImageView)findViewById(R.id.img_result));
+        mApiChecker.check_write_app_data_path((TextView) findViewById(R.id.txt_results),
+                (ImageView) findViewById(R.id.img_result));
     }
 
         // This method will be invoked when clear button is clicked in the app.
@@ -127,5 +126,11 @@ public class MainActivity extends ActionBarActivity {
 
         ImageView imgVw = (ImageView)findViewById(R.id.img_result);
         imgVw.setImageBitmap(null);
+    }
+
+    public void copyFileFromAssetsToInaccessiblePath(View view) {
+        clearResults(null);
+        mApiChecker.check_write_to_inaccessible_path((TextView) findViewById(R.id.txt_results),
+                (ImageView) findViewById(R.id.img_result));
     }
 }

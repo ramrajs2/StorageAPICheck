@@ -67,23 +67,40 @@ public class APICheckHelper {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void check_getExternalStorageState_secondary(TextView txt_results)  {
-        txt_results.append("\n"+Environment.getExternalStorageState(new File(System.getenv("SECONDARY_STORAGE"))));
+        txt_results.append("\n" + Environment.getExternalStorageState(new File(System.getenv("SECONDARY_STORAGE"))));
     }
 
-    public void check_write_file(TextView txt_results, ImageView img_result)  {
+    public void check_write_app_data_path(TextView txt_results, ImageView img_result){
+        check_write_file(txt_results, img_result, mContext.getExternalFilesDir(null));
+    }
+
+    public void check_write_to_inaccessible_path(TextView txt_results, ImageView img_result) {
+        String sec_path = System.getenv("SECONDARY_STORAGE");
+        if(sec_path == null)
+            txt_results.append("\nSECONDARY_STORAGE path is null. Copy aborted.. " );
+        else
+            check_write_file(txt_results, img_result, new File(System.getenv("SECONDARY_STORAGE")));
+    }
+
+    public void check_write_file(TextView txt_results, ImageView img_result, File filepath)  {
         AssetManager assetMgr = mContext.getAssets();
         InputStream is = null;
         OutputStream out = null;
         String filename = "sample.png";
         try {
+            if(filepath == null)    {
+                txt_results.append("\nWorking Path: " + filepath);
+                return;
+            }
+            txt_results.append("\nWorking Path: " + filepath.getAbsolutePath());
 
-            txt_results.append("\n Removing the file if exists already in the path.. ");
-            File file = new File(mContext.getExternalFilesDir(null), filename);
+            txt_results.append("\n\n Removing the file to be copied if already exists in the path.. ");
+            File file = new File(filepath, filename);
             file.delete();
 
             txt_results.append(Html.fromHtml("<br><br><u>Before Copying...</u>"));
-            listFiles(txt_results, mContext.getExternalFilesDir(null).toString());
-            txt_results.append("\n\nCopying the image below(" + filename + ") from Assets folder to the location :\n" + mContext.getExternalFilesDir(null) +"\n\n");
+            listFiles(txt_results, filepath.toString());
+            txt_results.append("\n\nCopying the image below(" + filename + ") from Assets folder to the specified location... \n\n" );
             is = assetMgr.open(filename);
 
             //Setting the image to imageView
@@ -91,15 +108,15 @@ public class APICheckHelper {
             img_result.setImageBitmap(bmap);
 
             //Copying file to Apps data folder
-            file = new File(mContext.getExternalFilesDir(null), filename);
+            file = new File(filepath, filename);
             out = new FileOutputStream(file);
             copyFile(is, out);
             txt_results.append(Html.fromHtml("<br><u>After Copying...</u>"));
-            listFiles(txt_results, mContext.getExternalFilesDir(null).toString());
+            listFiles(txt_results, filepath.toString());
 
             txt_results.append("\n\nCopied Successfully");
         } catch (IOException e) {
-            txt_results.append("\n\nCopied Failed");
+            txt_results.append("\n\nCopy Failed with the exception " + e.toString());
             e.printStackTrace();
         }
         finally {
@@ -120,7 +137,7 @@ public class APICheckHelper {
     }
 
     private void listFiles(TextView txt_results, String path) {
-        txt_results.append(Html.fromHtml("<br><u> Contents of the App's data path: </u>"));
+        txt_results.append(Html.fromHtml("<br><u> Contents of the path above: </u>"));
         File file = new File(path);
         File[] files = file.listFiles();
         for(int i=0;i<files.length; i++)    {
@@ -128,4 +145,5 @@ public class APICheckHelper {
         }
         txt_results.append("\n");
     }
+
 }
