@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Secondary Storage APIs Check</string>
+    <string name="hello_world">APIs Test</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- This section holds labels for buttons used in the application -->
+    <string name="btn_label_check_all_apis">Check: Directory/Mount APIs for Secondary Storage</string>
+</resources>
