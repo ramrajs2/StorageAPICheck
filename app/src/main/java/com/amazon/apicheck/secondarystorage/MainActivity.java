@@ -1,6 +1,7 @@
 package com.amazon.apicheck.secondarystorage;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -143,6 +144,12 @@ public class MainActivity extends ActionBarActivity {
     public void checkOpenDocumentAction(View view) {
         clearResults(null);
         TextView tv = (TextView) findViewById(R.id.txt_results);
-        tv.setText("this action is yet to be tested. Please ");
+        tv.setText("This action is yet to be implemented. Please wait till its done");
+
+        /*Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+        intent.setType("text*//*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivity(intent);*/
     }
+
 }
