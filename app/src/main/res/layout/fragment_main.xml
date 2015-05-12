@@ -38,10 +38,28 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/btn_action_open_document"
+        android:id="@+id/btn_action_open_document"
+        android:layout_below="@+id/btn_copy_to_invalid_path"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="checkOpenDocumentAction" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_copy_to_pictures"
+        android:id="@+id/btn_copy_to_pictures_path"
+        android:layout_below="@+id/btn_action_open_document"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="copyFileFromAssetsToPicturesPath" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="clear"
         android:id="@+id/button"
         android:onClick="clearResults"
-        android:layout_below="@+id/btn_copy_to_invalid_path"
+        android:layout_below="@+id/btn_copy_to_pictures_path"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
 

@@ -133,4 +133,16 @@ public class MainActivity extends ActionBarActivity {
         mApiChecker.check_write_to_inaccessible_path((TextView) findViewById(R.id.txt_results),
                 (ImageView) findViewById(R.id.img_result));
     }
+
+    public void copyFileFromAssetsToPicturesPath(View view) {
+        clearResults(null);
+        mApiChecker.check_write_to_pictures_path((TextView) findViewById(R.id.txt_results),
+                (ImageView) findViewById(R.id.img_result));
+    }
+
+    public void checkOpenDocumentAction(View view) {
+        clearResults(null);
+        TextView tv = (TextView) findViewById(R.id.txt_results);
+        tv.setText("this action is yet to be tested. Please ");
+    }
 }

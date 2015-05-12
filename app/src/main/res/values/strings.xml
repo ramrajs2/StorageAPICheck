@@ -7,4 +7,6 @@
     <string name="btn_label_check_all_apis">Check: Directory/Mount APIs for Secondary Storage</string>
     <string name="btn_copy_image">Copy Image from Assets folder to App data folder</string>
     <string name="btn_copy_image_inaccessible_path">copy Image to Inaccessible Path in Sec Storage</string>
+    <string name="btn_action_open_document">Check ACTION_OPEN_DOCUMENT</string>
+    <string name="btn_copy_to_pictures">Copy IMAGE to Pictures folder</string>
 </resources>
