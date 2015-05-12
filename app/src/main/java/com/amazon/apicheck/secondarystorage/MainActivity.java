@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.lang.reflect.Method;
@@ -46,9 +47,7 @@ public class MainActivity extends ActionBarActivity {
         context = getApplicationContext();
         mApiChecker = new APICheckHelper();
         setContentView(R.layout.activity_main);
-
-        Button button = (Button) findViewById(R.id.btn_check_all_apis);
-        button.performClick();
+        ((TextView)findViewById(R.id.txt_results)).setTextColor(Color.parseColor("#0000FF"));
     }
 
     public static Context getAppContext() {
@@ -105,7 +104,6 @@ public class MainActivity extends ActionBarActivity {
             result_txt.append(Html.fromHtml("<u>" + apiName + "</u>"));
             try {
                 method = c.getDeclaredMethod(methodname, args);
-                result_txt.setTextColor(Color.parseColor("#0000FF"));
                 method.invoke(mApiChecker, result_txt);
             } catch (Exception e) {
                 result_txt.append("\n Something went wrong while invoking the method "
@@ -115,9 +113,19 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    // This method will be invoked when clear button is clicked in the app.
+    // This method will be invoked when "Copy File" button is clicked in the app.
+    public void copyFileFromAssets(View view) {
+        clearResults(null);
+        mApiChecker.check_write_file((TextView) findViewById(R.id.txt_results),
+                (ImageView)findViewById(R.id.img_result));
+    }
+
+        // This method will be invoked when clear button is clicked in the app.
     public void clearResults(View view) {
         TextView tv = (TextView) findViewById(R.id.txt_results);
         tv.setText("");
+
+        ImageView imgVw = (ImageView)findViewById(R.id.img_result);
+        imgVw.setImageBitmap(null);
     }
 }

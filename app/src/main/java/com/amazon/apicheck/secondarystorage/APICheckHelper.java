@@ -3,9 +3,12 @@ package com.amazon.apicheck.secondarystorage;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Environment;
 import android.text.Html;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
@@ -67,26 +70,62 @@ public class APICheckHelper {
         txt_results.append("\n"+Environment.getExternalStorageState(new File(System.getenv("SECONDARY_STORAGE"))));
     }
 
-    public void check_write_file()  {
+    public void check_write_file(TextView txt_results, ImageView img_result)  {
         AssetManager assetMgr = mContext.getAssets();
+        InputStream is = null;
+        OutputStream out = null;
         String filename = "sample.png";
         try {
-            InputStream is = assetMgr.open(filename);
-            File file = new File(mContext.getExternalFilesDir(null), filename);
-            OutputStream out = new FileOutputStream(file);
-            copyFile(is,out);
 
+            txt_results.append("\n Removing the file if exists already in the path.. ");
+            File file = new File(mContext.getExternalFilesDir(null), filename);
+            file.delete();
+
+            txt_results.append(Html.fromHtml("<br><br><u>Before Copying...</u>"));
+            listFiles(txt_results, mContext.getExternalFilesDir(null).toString());
+            txt_results.append("\n\nCopying the image below(" + filename + ") from Assets folder to the location :\n" + mContext.getExternalFilesDir(null) +"\n\n");
+            is = assetMgr.open(filename);
+
+            //Setting the image to imageView
+            Bitmap bmap = BitmapFactory.decodeStream(is);
+            img_result.setImageBitmap(bmap);
+
+            //Copying file to Apps data folder
+            file = new File(mContext.getExternalFilesDir(null), filename);
+            out = new FileOutputStream(file);
+            copyFile(is, out);
+            txt_results.append(Html.fromHtml("<br><u>After Copying...</u>"));
+            listFiles(txt_results, mContext.getExternalFilesDir(null).toString());
+
+            txt_results.append("\n\nCopied Successfully");
         } catch (IOException e) {
+            txt_results.append("\n\nCopied Failed");
             e.printStackTrace();
         }
-
+        finally {
+            try {
+                if(is != null) is.close();
+                if(out != null) out.close();
+            }
+            catch (Exception e) {}
+        }
     }
 
     private void copyFile(InputStream is, OutputStream out) throws IOException {
         byte[] buff = new byte[1024];
         int read;
-        while((read = is.read(buff))!=1)    {
+        while((read = is.read(buff))>0)    {
             out.write(buff, 0, read);
         }
+    }
+
+    private void listFiles(TextView txt_results, String path) {
+        txt_results.append(Html.fromHtml("<br><u> Contents of the App's data path: </u>"));
+        File file = new File(path);
+        File[] files = file.listFiles();
+        for(int i=0;i<files.length; i++)    {
+            txt_results.append("\n"+files[i].getName());
+        }
+        txt_results.append("\n");
     }
 }

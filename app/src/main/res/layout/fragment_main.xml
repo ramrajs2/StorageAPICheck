@@ -17,16 +17,24 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
-
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_copy_image"
+        android:id="@+id/btn_copy_image"
+        android:layout_below="@+id/btn_check_all_apis"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="copyFileFromAssets" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="clear"
         android:id="@+id/button"
         android:onClick="clearResults"
-        android:layout_below="@+id/btn_check_all_apis"
+        android:layout_below="@+id/btn_copy_image"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"/>
 
     <ScrollView
         android:id="@+id/scrl_main"
@@ -47,6 +55,13 @@
                 android:text="clear"
                 android:id="@+id/txt_results" />
 
+            <ImageView
+                android:id="@+id/img_result"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_results" />
+
         </RelativeLayout>
     </ScrollView>
+
 </RelativeLayout>

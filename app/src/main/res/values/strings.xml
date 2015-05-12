@@ -5,4 +5,5 @@
 
     <!-- This section holds labels for buttons used in the application -->
     <string name="btn_label_check_all_apis">Check: Directory/Mount APIs for Secondary Storage</string>
+    <string name="btn_copy_image">Copy Image from Assets folder to App data folder</string>
 </resources>
