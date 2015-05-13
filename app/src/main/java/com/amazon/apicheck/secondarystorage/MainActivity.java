@@ -1,11 +1,17 @@
 package com.amazon.apicheck.secondarystorage;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
+import android.support.v4.provider.DocumentFile;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,7 +19,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -157,16 +168,50 @@ public class MainActivity extends ActionBarActivity {
         mApiChecker.check_write_to_dirs_path();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void checkOpenDocumentAction(View view) {
         clearResults(null);
-        appendTextView("This action is yet to be implemented. Please wait till its done");
 
-        /*Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        intent.setType("text*//*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        startActivity(intent);*/
+        appendTextView("ACTION_OPEN_DOCUMENT_TREE is being invoked\n", Color.BLUE, true);
+        appendTextView("");
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+        try {
+            startActivityForResult(intent, 42);
+            Toast.makeText(mContext,"Choose 'Show SDCARD' option from top right menu",Toast.LENGTH_LONG).show();
+        }
+        catch (Exception e) {
+            appendTextView("Error While starting the activity for result", Color.RED, true);
+            appendTextView(exceptionToString(e), Color.RED);
+            e.printStackTrace();
+        }
     }
 
+    private String exceptionToString(Exception ex)  {
+        StringWriter error = new StringWriter();
+        ex.printStackTrace(new PrintWriter(error));
+        return error.toString();
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        if (resultCode == RESULT_OK) {
+            Uri treeUri = resultData.getData();
+            DocumentFile pickedDir = DocumentFile.fromTreeUri(this, treeUri);
+            appendTextView("Picked Folder :" , Color.RED);
+            appendTextView(pickedDir.getName());
+
+            // List all existing files inside picked directory
+            StringBuilder filesList = new StringBuilder();
+            for (DocumentFile file : pickedDir.listFiles()) {
+                filesList.append(file.getName() + "\n");
+            }
+            appendTextView("Files/Folders in the chosen path:" , Color.RED);
+            appendTextView(filesList.toString());
+
+        }
+        else {
+            appendTextView("Result is not OK");
+        }
+    }
 
     public static void appendTextView(String value) {
         appendTextView(value, Color.BLUE);

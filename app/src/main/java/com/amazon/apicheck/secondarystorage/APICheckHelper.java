@@ -16,9 +16,11 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 /**
  * This class just provides APIs to invoke the requested APIs
@@ -147,7 +149,7 @@ public class APICheckHelper {
         AssetManager assetMgr = mContext.getAssets();
         InputStream is = null;
         OutputStream out = null;
-        String filename = "sample.png";
+        String filename = "sample.txt";
         try {
             if (filepath == null) {
                 MainActivity.appendTextView("Working Path: " + filepath);
@@ -155,8 +157,9 @@ public class APICheckHelper {
             }
             MainActivity.appendTextView("Path: " + filepath.getAbsolutePath(), Color.BLACK);
 
-            //MainActivity.appendTextView("Removing the file to be copied if already exists in the path.. ");
-            File file = new File(filepath, filename);
+            /*//MainActivity.appendTextView("Removing the file to be copied if already exists in the path.. ");
+            File file;
+            file = new File(filepath, filename);
             file.delete();
 
             //MainActivity.appendTextView(Html.fromHtml("<br><br><u>Before Copying...</u>"));
@@ -169,11 +172,19 @@ public class APICheckHelper {
             out = new FileOutputStream(file);
             copyFile(is, out);
             //MainActivity.appendTextView(Html.fromHtml("<br><u>After Copying...</u>"));
-            //listFiles( filepath.toString());
+            //listFiles( filepath.toString());*/
+
+
+            // Writing a text file into the path given
+            File outFile = new File(filepath, filename);
+            FileWriter writer = new FileWriter(outFile);
+            writer.append("Some Sample Text");
+            writer.flush();
+            writer.close();
 
             MainActivity.appendTextView(" >>>>>> Copied Successfully <<<<<", Color.rgb(0, 102, 51));
             MainActivity.appendTextView("                      PASS!!!" , Color.rgb(0,102,51));
-        } catch (IOException e) {
+        } catch (Exception e) {
             MainActivity.appendTextView(" >>>>>> Copy Failed <<<<<< " , Color.RED);
             MainActivity.appendTextView(e.toString(), Color.RED);
             MainActivity.appendTextView("                     FAIL!!!", Color.rgb(153,0,0));
