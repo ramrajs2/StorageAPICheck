@@ -1,7 +1,7 @@
 package com.amazon.apicheck.secondarystorage;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.lang.reflect.Method;
@@ -19,16 +21,24 @@ import java.util.Iterator;
 
 public class MainActivity extends ActionBarActivity {
 
-    private static final String API_CHECK_HELPER_FULLY_QUALIFIED_CLASS_NAME = "com.amazon.apicheck.secondarystorage.APICheckHelper";
+    private static final String API_CHECK_HELPER_FULLY_QUALIFIED_CLASS_NAME
+            = "com.amazon.apicheck.secondarystorage.APICheckHelper";
     APICheckHelper mApiChecker;
-    private static Context context;
+
+    final int mNumOfTxtVws = 50;
+    final static int ID_START_ADDR = 2000;
+    public static int mTxtVwCount;
+    public TextView[] mTxtVws;
+    public static LinearLayout mResultLayout;
+
+    private static Context mContext;
 
     // APIs to be checked will be added in this arraylist
     // Before adding a new API here, create a check method in APICheckHelper.java
     public static ArrayList<String> apisToTest = new ArrayList<String>();
 
     static {
-        /*apisToTest.add("getExternalStorageDirectory");
+        apisToTest.add("getExternalStorageDirectory");
         apisToTest.add("getExternalStoragePublicDirectory");
         apisToTest.add("getExternalStorageState");
         apisToTest.add("isExternalStorageEmulated");
@@ -36,7 +46,7 @@ public class MainActivity extends ActionBarActivity {
         apisToTest.add("getExternalCacheDir");
         apisToTest.add("getExternalFilesDir");
         apisToTest.add("getenv_sec_storage");
-        apisToTest.add("getExternalStorageState_secondary");*/
+        apisToTest.add("getExternalStorageState_secondary");
         apisToTest.add("getExternalFilesDirs");
         apisToTest.add("getExternalCacheDirs");
         apisToTest.add("getExternalMediaDirs");
@@ -47,14 +57,19 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getApplicationContext();
-        mApiChecker = new APICheckHelper();
         setContentView(R.layout.activity_main);
-        ((TextView)findViewById(R.id.txt_results)).setTextColor(Color.parseColor("#0000FF"));
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        // Initializing values
+        mContext = getApplicationContext();
+        mTxtVwCount = 0;
+        mTxtVws = new TextView[mNumOfTxtVws];
+        mResultLayout = (LinearLayout) findViewById(R.id.result_linear_layout);
+        mApiChecker = new APICheckHelper();
     }
 
     public static Context getAppContext() {
-        return MainActivity.context;
+        return MainActivity.mContext;
     }
 
 
@@ -83,18 +98,13 @@ public class MainActivity extends ActionBarActivity {
     // This method will be invoked when "Check All APIs" button is clicked
     public void checkAllAPIs(View view) throws ClassNotFoundException {
 
-        TextView result_txt = (TextView) findViewById(R.id.txt_results);
-
         Class c = Class.forName(API_CHECK_HELPER_FULLY_QUALIFIED_CLASS_NAME);
-        Class[] args = new Class[1];
         Method method;
-
 
         // Reseting the results text box
         clearResults(null);
-        args[0] = TextView.class;
 
-        result_txt.append("\n Invoking APIs... \n ");
+        appendTextView("Invoking APIs... ");
         Iterator<String> it = apisToTest.iterator();
         String methodname;
         String apiName;
@@ -103,14 +113,13 @@ public class MainActivity extends ActionBarActivity {
         while (it.hasNext()) {
             apiName = it.next();
             methodname = "check_" + apiName;
-            result_txt.append("\n\n");
-            result_txt.append(Html.fromHtml("<u>" + apiName + "</u>"));
+            appendTextView(apiName, Color.RED);
             try {
-                method = c.getDeclaredMethod(methodname, args);
-                method.invoke(mApiChecker, result_txt);
+                method = c.getDeclaredMethod(methodname, null);
+                method.invoke(mApiChecker);
             } catch (Exception e) {
-                result_txt.append("\n Something went wrong while invoking the method "
-                        + methodname + ". Error:" + e.toString() + ". Check logs for stack trace");
+                appendTextView("Something went wrong while invoking the method "
+                        + methodname + ". Error:" + e.toString() + ". Check logs for stack trace", Color.MAGENTA);
                 e.printStackTrace();
             }
         }
@@ -119,46 +128,71 @@ public class MainActivity extends ActionBarActivity {
     // This method will be invoked when "Copy File" button is clicked in the app.
     public void copyFileFromAssetsToAppDataPath(View view) {
         clearResults(null);
-        mApiChecker.check_write_app_data_path((TextView) findViewById(R.id.txt_results),
-                (ImageView) findViewById(R.id.img_result));
+        mApiChecker.check_write_app_data_path();
     }
 
-        // This method will be invoked when clear button is clicked in the app.
+    // This method will be invoked when clear button is clicked in the app.
     public void clearResults(View view) {
-        TextView tv = (TextView) findViewById(R.id.txt_results);
-        tv.setText("");
-
-        ImageView imgVw = (ImageView)findViewById(R.id.img_result);
-        imgVw.setImageBitmap(null);
+        View tmp;
+        for (int i = 0; i < mTxtVwCount; i++) {
+            tmp = findViewById(ID_START_ADDR + i);
+            ((LinearLayout) tmp.getParent()).removeView(tmp);
+        }
+        mTxtVwCount = 0;
     }
 
     public void copyFileFromAssetsToInaccessiblePath(View view) {
         clearResults(null);
-        mApiChecker.check_write_to_inaccessible_path((TextView) findViewById(R.id.txt_results),
-                (ImageView) findViewById(R.id.img_result));
+        mApiChecker.check_write_to_inaccessible_path();
     }
 
     public void copyFileFromAssetsToPicturesPath(View view) {
         clearResults(null);
-        mApiChecker.check_write_to_pictures_path((TextView) findViewById(R.id.txt_results),
-                (ImageView) findViewById(R.id.img_result));
+        mApiChecker.check_write_to_pictures_path();
     }
 
     public void copyFiletoDirs(View view) {
         clearResults(null);
-        mApiChecker.check_write_to_dirs_path((TextView) findViewById(R.id.txt_results),
-                (ImageView) findViewById(R.id.img_result));
+        appendTextView("");
+        mApiChecker.check_write_to_dirs_path();
     }
 
     public void checkOpenDocumentAction(View view) {
         clearResults(null);
-        TextView tv = (TextView) findViewById(R.id.txt_results);
-        tv.setText("This action is yet to be implemented. Please wait till its done");
+        appendTextView("This action is yet to be implemented. Please wait till its done");
 
         /*Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
         intent.setType("text*//*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         startActivity(intent);*/
+    }
+
+
+    public static void appendTextView(String value) {
+        appendTextView(value, Color.BLUE);
+    }
+
+    public static void appendTextView(String value, int color) {
+        appendTextView(value, color, false);
+    }
+
+    public static void appendTextView(String value, int color, boolean isTopic) {
+        TextView txtVw;
+        txtVw = new TextView(mContext);
+        txtVw.setId(ID_START_ADDR + mTxtVwCount++);
+        txtVw.setTextSize(value.length() + 20);
+        txtVw.setTextColor(color);
+        txtVw.setTextSize(18);
+        txtVw.setPadding(13, 0, 0, 0);
+        txtVw.setFreezesText(true);
+        txtVw.setText(value);
+
+        if (color != Color.RED && !isTopic)
+            txtVw.append("\n");
+        if(isTopic)
+            txtVw.setBackgroundColor(Color.GRAY);
+
+        mResultLayout.addView(txtVw);
     }
 
 }

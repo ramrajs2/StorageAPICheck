@@ -5,10 +5,13 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Environment;
 import android.text.Html;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.File;
@@ -31,151 +34,149 @@ public class APICheckHelper {
         mContext = MainActivity.getAppContext();
     }
 
-    public void check_getExternalStorageDirectory(TextView txt_results) {
-        txt_results.append("\n" + Environment.getExternalStorageDirectory().toString());
+    public void check_getExternalStorageDirectory() {
+        MainActivity.appendTextView(Environment.getExternalStorageDirectory().toString());
     }
 
-    public void check_getExternalStoragePublicDirectory(TextView txt_results) {
-        txt_results.append("\n <for Pictures directory>");
-        txt_results.append("\n" + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES));
+    public void check_getExternalStoragePublicDirectory() {
+        MainActivity.appendTextView("<for Pictures directory>", Color.RED);
+        MainActivity.appendTextView(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath());
     }
 
-    public void check_getExternalStorageState(TextView txt_results) {
-        txt_results.append("\n" + Environment.getExternalStorageState().toString());
+    public void check_getExternalStorageState() {
+        MainActivity.appendTextView(Environment.getExternalStorageState().toString());
     }
 
-    public void check_isExternalStorageEmulated(TextView txt_results) {
-        txt_results.append("\n" + Environment.isExternalStorageEmulated());
+    public void check_isExternalStorageEmulated() {
+        MainActivity.appendTextView("" + Environment.isExternalStorageEmulated());
     }
 
-    public void check_isExternalStorageRemovable(TextView txt_results) {
-        txt_results.append("\n" + Environment.isExternalStorageRemovable());
+    public void check_isExternalStorageRemovable() {
+        MainActivity.appendTextView("" + Environment.isExternalStorageRemovable());
     }
 
-    public void check_getExternalCacheDir(TextView txt_results) {
-        txt_results.append("\n" + mContext.getExternalCacheDir().toString());
+    public void check_getExternalCacheDir() {
+        MainActivity.appendTextView(mContext.getExternalCacheDir().toString());
     }
 
-    public void check_getExternalFilesDir(TextView txt_results) {
-        txt_results.append("\n <for Documents directory>");
-        txt_results.append("\n" + mContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString());
+    public void check_getExternalFilesDir() {
+        MainActivity.appendTextView("<for Documents directory>", Color.RED);
+        MainActivity.appendTextView(mContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString());
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void check_getExternalFilesDirs(TextView txt_results) {
+    public void check_getExternalFilesDirs() {
         File files[] = mContext.getExternalFilesDirs(null);
         if (files != null)
             for (File file : files)
-                txt_results.append("\n" + file.getAbsolutePath());
+                MainActivity.appendTextView(file.getAbsolutePath());
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void check_getExternalCacheDirs(TextView txt_results) {
+    public void check_getExternalCacheDirs() {
         File files[] = mContext.getExternalCacheDirs();
         if (files != null)
             for (File file : files)
-                txt_results.append("\n" + file.getAbsolutePath());
+                MainActivity.appendTextView(file.getAbsolutePath());
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public void check_getExternalMediaDirs(TextView txt_results) {
+    public void check_getExternalMediaDirs() {
         File files[] = mContext.getExternalMediaDirs();
         if (files != null)
             for (File file : files)
-                txt_results.append("\n" + file.getAbsolutePath());
+                MainActivity.appendTextView(file.getAbsolutePath());
     }
 
-    public void check_getenv_sec_storage(TextView txt_results) {
-        txt_results.append("\n" + System.getenv("SECONDARY_STORAGE"));
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public void check_getExternalStorageState_secondary(TextView txt_results) {
-        txt_results.append("\n" + Environment.getExternalStorageState(new File(System.getenv("SECONDARY_STORAGE"))));
-    }
-
-    public void check_write_app_data_path(TextView txt_results, ImageView img_result) {
-        check_write_file(txt_results, img_result, mContext.getExternalFilesDir(null));
+    public void check_getenv_sec_storage() {
+        MainActivity.appendTextView(System.getenv("SECONDARY_STORAGE"));
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public void check_write_to_dirs_path(TextView txt_results, ImageView img_result) {
+    public void check_getExternalStorageState_secondary() {
+        MainActivity.appendTextView(Environment.getExternalStorageState(new File(System.getenv("SECONDARY_STORAGE"))));
+    }
+
+    public void check_write_app_data_path() {
+        check_write_file(mContext.getExternalFilesDir(null));
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void check_write_to_dirs_path() {
         File[] files;
         files = mContext.getExternalFilesDirs(null);
-        copyImageToPaths(txt_results, img_result, "getExternalFilesDirs", files);
+        copyImageToPaths( "getExternalFilesDirs", files);
 
         files = mContext.getExternalCacheDirs();
-        copyImageToPaths(txt_results, img_result, "getExternalCacheDirs", files);
+        copyImageToPaths(  "getExternalCacheDirs", files);
 
         files = mContext.getExternalMediaDirs();
-        copyImageToPaths(txt_results, img_result, "getExternalMediaDirs", files);
+        copyImageToPaths(  "getExternalMediaDirs", files);
     }
 
-    private void copyImageToPaths(TextView txt_results, ImageView img_result, String apiName, File files[]) {
+    private void copyImageToPaths( String apiName, File files[]) {
         if (files == null) {
-            txt_results.append("\n" + apiName + "returned no paths.");
+            MainActivity.appendTextView(apiName + "returned no paths.");
         } else {
-            txt_results.append("\nCopying files to " + apiName + " paths");
+            MainActivity.appendTextView("Copying an image to " + apiName + " paths", Color.WHITE, true);
+            int count = 1;
             for (File file : files) {
-                check_write_file(txt_results, img_result, file);
+                MainActivity.appendTextView("============" + count++ + "============");
+                check_write_file(file);
             }
         }
-        txt_results.append("\n------------------------------------------------\n");
     }
 
-    public void check_write_to_inaccessible_path(TextView txt_results, ImageView img_result) {
+    public void check_write_to_inaccessible_path() {
         String sec_path = System.getenv("SECONDARY_STORAGE");
         if (sec_path == null)
-            txt_results.append("\nSECONDARY_STORAGE path is null. Copy aborted.. ");
+            MainActivity.appendTextView("SECONDARY_STORAGE path is null. Copy aborted.. ");
         else
-            check_write_file(txt_results, img_result, new File(sec_path));
+            check_write_file(  new File(sec_path));
     }
 
-    public void check_write_to_pictures_path(TextView txt_results, ImageView img_result) {
+    public void check_write_to_pictures_path() {
         String sec_path = "/sdcard/Pictures/";
         if (sec_path == null)
-            txt_results.append("\n/sdcard/Pictures/ path is null. Copy aborted.. ");
+            MainActivity.appendTextView("/sdcard/Pictures/ path is null. Copy aborted.. ");
         else
-            check_write_file(txt_results, img_result, new File(sec_path));
+            check_write_file(  new File(sec_path));
     }
 
-    public void check_write_file(TextView txt_results, ImageView img_result, File filepath) {
+    public void check_write_file( File filepath) {
         AssetManager assetMgr = mContext.getAssets();
         InputStream is = null;
         OutputStream out = null;
         String filename = "sample.png";
         try {
             if (filepath == null) {
-                txt_results.append("\nWorking Path: " + filepath);
+                MainActivity.appendTextView("Working Path: " + filepath);
                 return;
             }
-            txt_results.append("\nPath: " + filepath.getAbsolutePath());
+            MainActivity.appendTextView("Path: " + filepath.getAbsolutePath(), Color.BLACK);
 
-            //txt_results.append("\n\n Removing the file to be copied if already exists in the path.. ");
+            //MainActivity.appendTextView("Removing the file to be copied if already exists in the path.. ");
             File file = new File(filepath, filename);
             file.delete();
 
-            //txt_results.append(Html.fromHtml("<br><br><u>Before Copying...</u>"));
-            //listFiles(txt_results, filepath.toString());
-            //txt_results.append("\n\nCopying the image below(" + filename + ") from Assets folder to the specified location... \n\n");
+            //MainActivity.appendTextView(Html.fromHtml("<br><br><u>Before Copying...</u>"));
+            //listFiles( filepath.toString());
+            //MainActivity.appendTextView("Copying the image below(" + filename + ") from Assets folder to the specified location... ");
             is = assetMgr.open(filename);
-
-            //Setting the image to imageView
-            Bitmap bmap = BitmapFactory.decodeStream(is);
-            img_result.setImageBitmap(bmap);
 
             //Copying file to Apps data folder
             file = new File(filepath, filename);
             out = new FileOutputStream(file);
             copyFile(is, out);
-            //txt_results.append(Html.fromHtml("<br><u>After Copying...</u>"));
-            //listFiles(txt_results, filepath.toString());
+            //MainActivity.appendTextView(Html.fromHtml("<br><u>After Copying...</u>"));
+            //listFiles( filepath.toString());
 
-            txt_results.append(" \n >>>>>> Copied Successfully <<<<<");
-            txt_results.append("\n\n                      PASS!!!");
+            MainActivity.appendTextView(" >>>>>> Copied Successfully <<<<<", Color.rgb(0, 102, 51));
+            MainActivity.appendTextView("                      PASS!!!" , Color.rgb(0,102,51));
         } catch (IOException e) {
-            txt_results.append(" \n >>>>>> Copy Failed <<<<<< \n" + e.toString());
-            txt_results.append("\n\n                      FAIL!!!");
+            MainActivity.appendTextView(" >>>>>> Copy Failed <<<<<< " , Color.RED);
+            MainActivity.appendTextView(e.toString(), Color.RED);
+            MainActivity.appendTextView("                     FAIL!!!", Color.rgb(153,0,0));
             e.printStackTrace();
         } finally {
             try {
@@ -194,17 +195,16 @@ public class APICheckHelper {
         }
     }
 
-    private void listFiles(TextView txt_results, String path) {
-        txt_results.append(Html.fromHtml("<br><u> Contents of the path above: </u>"));
+    private void listFiles( String path) {
+        MainActivity.appendTextView("Contents of the path above:");
         File file = new File(path);
         File[] files = file.listFiles();
         if (files != null)
             for (int i = 0; i < files.length; i++) {
-                txt_results.append("\n" + files[i].getName());
+                MainActivity.appendTextView(files[i].getName());
             }
         else
-            txt_results.append("\n<empty>");
-        txt_results.append("\n");
+            MainActivity.appendTextView("<empty>");
     }
 
 }
