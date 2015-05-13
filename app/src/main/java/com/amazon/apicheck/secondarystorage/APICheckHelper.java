@@ -64,24 +64,24 @@ public class APICheckHelper {
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public void check_getExternalFilesDirs(TextView txt_results) {
         File files[] = mContext.getExternalFilesDirs(null);
-        if(files!=null)
-            for(File file: files)
+        if (files != null)
+            for (File file : files)
                 txt_results.append("\n" + file.getAbsolutePath());
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public void check_getExternalCacheDirs(TextView txt_results) {
         File files[] = mContext.getExternalCacheDirs();
-        if(files!=null)
-            for(File file: files)
+        if (files != null)
+            for (File file : files)
                 txt_results.append("\n" + file.getAbsolutePath());
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void check_getExternalMediaDirs(TextView txt_results) {
         File files[] = mContext.getExternalMediaDirs();
-        if(files!=null)
-            for(File file: files)
+        if (files != null)
+            for (File file : files)
                 txt_results.append("\n" + file.getAbsolutePath());
     }
 
@@ -111,16 +111,16 @@ public class APICheckHelper {
         copyImageToPaths(txt_results, img_result, "getExternalMediaDirs", files);
     }
 
-    private void copyImageToPaths(TextView txt_results, ImageView img_result, String apiName, File files[])  {
-        if(files == null)   {
+    private void copyImageToPaths(TextView txt_results, ImageView img_result, String apiName, File files[]) {
+        if (files == null) {
             txt_results.append("\n" + apiName + "returned no paths.");
-        }
-        else {
+        } else {
+            txt_results.append("\nCopying files to " + apiName + " paths");
             for (File file : files) {
                 check_write_file(txt_results, img_result, file);
-                txt_results.append("\n------------------------------------------------\n");
             }
         }
+        txt_results.append("\n------------------------------------------------\n");
     }
 
     public void check_write_to_inaccessible_path(TextView txt_results, ImageView img_result) {
@@ -174,7 +174,7 @@ public class APICheckHelper {
             txt_results.append(" \n >>>>>> Copied Successfully <<<<<");
             txt_results.append("\n\n                      PASS!!!");
         } catch (IOException e) {
-            txt_results.append("-- Copy Failed with the exception below:\n" + e.toString());
+            txt_results.append(" \n >>>>>> Copy Failed <<<<<< \n" + e.toString());
             txt_results.append("\n\n                      FAIL!!!");
             e.printStackTrace();
         } finally {
