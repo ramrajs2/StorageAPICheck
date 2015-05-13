@@ -4,9 +4,12 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.support.v4.provider.DocumentFile;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -21,11 +24,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.client.utils.URIUtils;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -192,11 +199,12 @@ public class MainActivity extends ActionBarActivity {
         return error.toString();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         if (resultCode == RESULT_OK) {
             Uri treeUri = resultData.getData();
             DocumentFile pickedDir = DocumentFile.fromTreeUri(this, treeUri);
-            appendTextView("Picked Folder :" , Color.RED);
+            appendTextView("Picked Folder :", Color.RED);
             appendTextView(pickedDir.getName());
 
             // List all existing files inside picked directory
@@ -206,6 +214,14 @@ public class MainActivity extends ActionBarActivity {
             }
             appendTextView("Files/Folders in the chosen path:" , Color.RED);
             appendTextView(filesList.toString());
+
+            appendTextView("Retrieved URI :", Color.RED);
+            appendTextView(pickedDir.getUri().toString());
+
+            /*Uri uuu = DocumentsContract.buildDocumentUriUsingTree(treeUri, DocumentsContract.getDocumentId(pickedDir.getUri()));
+            appendTextView(uuu.toString(), Color.RED);
+            File file = new File(uuu.getPath());
+            mApiChecker.check_write_file(file);*/
 
         }
         else {
@@ -225,7 +241,7 @@ public class MainActivity extends ActionBarActivity {
         TextView txtVw;
         txtVw = new TextView(mContext);
         txtVw.setId(ID_START_ADDR + mTxtVwCount++);
-        txtVw.setTextSize(value.length() + 20);
+        txtVw.setTextSize((value==null)? 0:value.length() + 20);
         txtVw.setTextColor(color);
         txtVw.setTextSize(18);
         txtVw.setPadding(13, 0, 0, 0);

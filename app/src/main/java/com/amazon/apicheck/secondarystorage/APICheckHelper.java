@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -107,16 +108,16 @@ public class APICheckHelper {
     public void check_write_to_dirs_path() {
         File[] files;
         files = mContext.getExternalFilesDirs(null);
-        copyImageToPaths( "getExternalFilesDirs", files);
+        copyImageToPaths("getExternalFilesDirs", files);
 
         files = mContext.getExternalCacheDirs();
-        copyImageToPaths(  "getExternalCacheDirs", files);
+        copyImageToPaths("getExternalCacheDirs", files);
 
         files = mContext.getExternalMediaDirs();
-        copyImageToPaths(  "getExternalMediaDirs", files);
+        copyImageToPaths("getExternalMediaDirs", files);
     }
 
-    private void copyImageToPaths( String apiName, File files[]) {
+    private void copyImageToPaths(String apiName, File files[]) {
         if (files == null) {
             MainActivity.appendTextView(apiName + "returned no paths.");
         } else {
@@ -134,7 +135,7 @@ public class APICheckHelper {
         if (sec_path == null)
             MainActivity.appendTextView("SECONDARY_STORAGE path is null. Copy aborted.. ");
         else
-            check_write_file(  new File(sec_path));
+            check_write_file(new File(sec_path));
     }
 
     public void check_write_to_pictures_path() {
@@ -142,11 +143,11 @@ public class APICheckHelper {
         if (sec_path == null)
             MainActivity.appendTextView("/sdcard/Pictures/ path is null. Copy aborted.. ");
         else
-            check_write_file(  new File(sec_path));
+            check_write_file(new File(sec_path));
     }
 
-    public void check_write_file( File filepath) {
-        AssetManager assetMgr = mContext.getAssets();
+    public void check_write_file(File filepath) {
+
         InputStream is = null;
         OutputStream out = null;
         String filename = "sample.txt";
@@ -157,37 +158,27 @@ public class APICheckHelper {
             }
             MainActivity.appendTextView("Path: " + filepath.getAbsolutePath(), Color.BLACK);
 
-            /*//MainActivity.appendTextView("Removing the file to be copied if already exists in the path.. ");
-            File file;
-            file = new File(filepath, filename);
-            file.delete();
-
-            //MainActivity.appendTextView(Html.fromHtml("<br><br><u>Before Copying...</u>"));
-            //listFiles( filepath.toString());
-            //MainActivity.appendTextView("Copying the image below(" + filename + ") from Assets folder to the specified location... ");
-            is = assetMgr.open(filename);
-
-            //Copying file to Apps data folder
-            file = new File(filepath, filename);
-            out = new FileOutputStream(file);
-            copyFile(is, out);
-            //MainActivity.appendTextView(Html.fromHtml("<br><u>After Copying...</u>"));
-            //listFiles( filepath.toString());*/
-
+            File outFile = new File(filepath, filename);
+            outFile.createNewFile();
 
             // Writing a text file into the path given
-            File outFile = new File(filepath, filename);
             FileWriter writer = new FileWriter(outFile);
             writer.append("Some Sample Text");
             writer.flush();
             writer.close();
 
+            // Writing file using BufferedWriter
+            /*BufferedWriter bw = new BufferedWriter(new FileWriter(outFile));
+            bw.write("Sample Text");
+            bw.flush();
+            bw.close();*/
+
             MainActivity.appendTextView(" >>>>>> Copied Successfully <<<<<", Color.rgb(0, 102, 51));
-            MainActivity.appendTextView("                      PASS!!!" , Color.rgb(0,102,51));
+            MainActivity.appendTextView("                      PASS!!!", Color.rgb(0, 102, 51));
         } catch (Exception e) {
-            MainActivity.appendTextView(" >>>>>> Copy Failed <<<<<< " , Color.RED);
+            MainActivity.appendTextView(" >>>>>> Copy Failed <<<<<< ", Color.RED);
             MainActivity.appendTextView(e.toString(), Color.RED);
-            MainActivity.appendTextView("                     FAIL!!!", Color.rgb(153,0,0));
+            MainActivity.appendTextView("                     FAIL!!!", Color.rgb(153, 0, 0));
             e.printStackTrace();
         } finally {
             try {
@@ -206,7 +197,7 @@ public class APICheckHelper {
         }
     }
 
-    private void listFiles( String path) {
+    private void listFiles(String path) {
         MainActivity.appendTextView("Contents of the path above:");
         File file = new File(path);
         File[] files = file.listFiles();

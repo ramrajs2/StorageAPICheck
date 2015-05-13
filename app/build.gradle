@@ -7,7 +7,8 @@ android {
     defaultConfig {
         applicationId "com.amazon.apicheck.secondarystorage"
         minSdkVersion 15
-        targetSdkVersion 22
+        maxSdkVersion 21
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }

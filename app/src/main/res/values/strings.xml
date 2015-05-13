@@ -10,5 +10,5 @@
     <string name="btn_action_open_document">ACTION_OPEN_DOCUMENT_TREE</string>
     <string name="btn_copy_to_pictures">Cp IMAGE->Pictures</string>
     <string name="btn_clear_results">Clear Results</string>
-    <string name="btn_copy_to_dirs">CP to DIRS</string>
+    <string name="btn_copy_to_dirs">Copy to DIRS paths</string>
 </resources>
