@@ -28,7 +28,7 @@ public class MainActivity extends ActionBarActivity {
     public static ArrayList<String> apisToTest = new ArrayList<String>();
 
     static {
-        apisToTest.add("getExternalStorageDirectory");
+        /*apisToTest.add("getExternalStorageDirectory");
         apisToTest.add("getExternalStoragePublicDirectory");
         apisToTest.add("getExternalStorageState");
         apisToTest.add("isExternalStorageEmulated");
@@ -36,7 +36,10 @@ public class MainActivity extends ActionBarActivity {
         apisToTest.add("getExternalCacheDir");
         apisToTest.add("getExternalFilesDir");
         apisToTest.add("getenv_sec_storage");
-        apisToTest.add("getExternalStorageState_secondary");
+        apisToTest.add("getExternalStorageState_secondary");*/
+        apisToTest.add("getExternalFilesDirs");
+        apisToTest.add("getExternalCacheDirs");
+        apisToTest.add("getExternalMediaDirs");
     }
 
     ;
@@ -138,6 +141,12 @@ public class MainActivity extends ActionBarActivity {
     public void copyFileFromAssetsToPicturesPath(View view) {
         clearResults(null);
         mApiChecker.check_write_to_pictures_path((TextView) findViewById(R.id.txt_results),
+                (ImageView) findViewById(R.id.img_result));
+    }
+
+    public void copyFiletoDirs(View view) {
+        clearResults(null);
+        mApiChecker.check_write_to_dirs_path((TextView) findViewById(R.id.txt_results),
                 (ImageView) findViewById(R.id.img_result));
     }
 

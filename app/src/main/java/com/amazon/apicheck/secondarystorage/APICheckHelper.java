@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Environment;
 import android.text.Html;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -62,6 +61,30 @@ public class APICheckHelper {
         txt_results.append("\n" + mContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString());
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public void check_getExternalFilesDirs(TextView txt_results) {
+        File files[] = mContext.getExternalFilesDirs(null);
+        if(files!=null)
+            for(File file: files)
+                txt_results.append("\n" + file.getAbsolutePath());
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public void check_getExternalCacheDirs(TextView txt_results) {
+        File files[] = mContext.getExternalCacheDirs();
+        if(files!=null)
+            for(File file: files)
+                txt_results.append("\n" + file.getAbsolutePath());
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void check_getExternalMediaDirs(TextView txt_results) {
+        File files[] = mContext.getExternalMediaDirs();
+        if(files!=null)
+            for(File file: files)
+                txt_results.append("\n" + file.getAbsolutePath());
+    }
+
     public void check_getenv_sec_storage(TextView txt_results) {
         txt_results.append("\n" + System.getenv("SECONDARY_STORAGE"));
     }
@@ -73,6 +96,31 @@ public class APICheckHelper {
 
     public void check_write_app_data_path(TextView txt_results, ImageView img_result) {
         check_write_file(txt_results, img_result, mContext.getExternalFilesDir(null));
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void check_write_to_dirs_path(TextView txt_results, ImageView img_result) {
+        File[] files;
+        files = mContext.getExternalFilesDirs(null);
+        copyImageToPaths(txt_results, img_result, "getExternalFilesDirs", files);
+
+        files = mContext.getExternalCacheDirs();
+        copyImageToPaths(txt_results, img_result, "getExternalCacheDirs", files);
+
+        files = mContext.getExternalMediaDirs();
+        copyImageToPaths(txt_results, img_result, "getExternalMediaDirs", files);
+    }
+
+    private void copyImageToPaths(TextView txt_results, ImageView img_result, String apiName, File files[])  {
+        if(files == null)   {
+            txt_results.append("\n" + apiName + "returned no paths.");
+        }
+        else {
+            for (File file : files) {
+                check_write_file(txt_results, img_result, file);
+                txt_results.append("\n------------------------------------------------\n");
+            }
+        }
     }
 
     public void check_write_to_inaccessible_path(TextView txt_results, ImageView img_result) {
@@ -101,15 +149,15 @@ public class APICheckHelper {
                 txt_results.append("\nWorking Path: " + filepath);
                 return;
             }
-            txt_results.append("\nWorking Path: " + filepath.getAbsolutePath());
+            txt_results.append("\nPath: " + filepath.getAbsolutePath());
 
-            txt_results.append("\n\n Removing the file to be copied if already exists in the path.. ");
+            //txt_results.append("\n\n Removing the file to be copied if already exists in the path.. ");
             File file = new File(filepath, filename);
             file.delete();
 
-            txt_results.append(Html.fromHtml("<br><br><u>Before Copying...</u>"));
-            listFiles(txt_results, filepath.toString());
-            txt_results.append("\n\nCopying the image below(" + filename + ") from Assets folder to the specified location... \n\n");
+            //txt_results.append(Html.fromHtml("<br><br><u>Before Copying...</u>"));
+            //listFiles(txt_results, filepath.toString());
+            //txt_results.append("\n\nCopying the image below(" + filename + ") from Assets folder to the specified location... \n\n");
             is = assetMgr.open(filename);
 
             //Setting the image to imageView
@@ -120,12 +168,13 @@ public class APICheckHelper {
             file = new File(filepath, filename);
             out = new FileOutputStream(file);
             copyFile(is, out);
-            txt_results.append(Html.fromHtml("<br><u>After Copying...</u>"));
-            listFiles(txt_results, filepath.toString());
+            //txt_results.append(Html.fromHtml("<br><u>After Copying...</u>"));
+            //listFiles(txt_results, filepath.toString());
 
-            txt_results.append("\n\nCopied Successfully");
+            txt_results.append(" \n >>>>>> Copied Successfully <<<<<");
+            txt_results.append("\n\n                      PASS!!!");
         } catch (IOException e) {
-            txt_results.append("\n\nCopy Failed with the exception below:\n" + e.toString());
+            txt_results.append("-- Copy Failed with the exception below:\n" + e.toString());
             txt_results.append("\n\n                      FAIL!!!");
             e.printStackTrace();
         } finally {

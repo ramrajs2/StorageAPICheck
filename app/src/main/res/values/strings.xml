@@ -4,9 +4,11 @@
     <string name="action_settings">Settings</string>
 
     <!-- This section holds labels for buttons used in the application -->
-    <string name="btn_label_check_all_apis">Check: Directory/Mount APIs for Secondary Storage</string>
-    <string name="btn_copy_image">Copy Image from Assets folder to App data folder</string>
-    <string name="btn_copy_image_inaccessible_path">copy Image to Inaccessible Path in Sec Storage</string>
-    <string name="btn_action_open_document">Check ACTION_OPEN_DOCUMENT</string>
-    <string name="btn_copy_to_pictures">Copy IMAGE to Pictures folder</string>
+    <string name="btn_label_check_all_apis">Storage API check</string>
+    <string name="btn_copy_image">Copy Image->Appdata</string>
+    <string name="btn_copy_image_inaccessible_path">cp Image->Sec Storage</string>
+    <string name="btn_action_open_document">ACTION_OPEN_DOCUMENT</string>
+    <string name="btn_copy_to_pictures">Cp IMAGE->Pictures</string>
+    <string name="btn_clear_results">Clear Results</string>
+    <string name="btn_copy_to_dirs">CP to DIRS</string>
 </resources>
