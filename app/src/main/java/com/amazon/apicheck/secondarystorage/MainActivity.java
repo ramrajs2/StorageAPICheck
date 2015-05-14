@@ -4,35 +4,23 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.support.v4.provider.DocumentFile;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.text.Html;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.client.utils.URIUtils;
-
-import java.io.File;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -50,6 +38,9 @@ public class MainActivity extends ActionBarActivity {
     public static LinearLayout mResultLayout;
 
     private static Context mContext;
+
+    // Colors
+    final int normal_heading = Color.rgb(76,0,153);
 
     // APIs to be checked will be added in this arraylist
     // Before adding a new API here, create a check method in APICheckHelper.java
@@ -131,7 +122,7 @@ public class MainActivity extends ActionBarActivity {
         while (it.hasNext()) {
             apiName = it.next();
             methodname = "check_" + apiName;
-            appendTextView(apiName, Color.RED);
+            appendTextView(apiName, normal_heading);
             try {
                 method = c.getDeclaredMethod(methodname, null);
                 method.invoke(mApiChecker);
@@ -146,7 +137,7 @@ public class MainActivity extends ActionBarActivity {
     // This method will be invoked when "Copy File" button is clicked in the app.
     public void copyFileFromAssetsToAppDataPath(View view) {
         clearResults(null);
-        mApiChecker.check_write_app_data_path();
+        mApiChecker.check_write_to_app_data_path();
     }
 
     // This method will be invoked when clear button is clicked in the app.
@@ -204,7 +195,7 @@ public class MainActivity extends ActionBarActivity {
         if (resultCode == RESULT_OK) {
             Uri treeUri = resultData.getData();
             DocumentFile pickedDir = DocumentFile.fromTreeUri(this, treeUri);
-            appendTextView("Picked Folder :", Color.RED);
+            appendTextView("Picked Folder :", normal_heading);
             appendTextView(pickedDir.getName());
 
             // List all existing files inside picked directory
@@ -212,20 +203,31 @@ public class MainActivity extends ActionBarActivity {
             for (DocumentFile file : pickedDir.listFiles()) {
                 filesList.append(file.getName() + "\n");
             }
-            appendTextView("Files/Folders in the chosen path:" , Color.RED);
+            appendTextView("Files/Folders in the chosen path:" , normal_heading);
             appendTextView(filesList.toString());
 
-            appendTextView("Retrieved URI :", Color.RED);
+            appendTextView("Retrieved URI :", normal_heading);
             appendTextView(pickedDir.getUri().toString());
 
-            /*Uri uuu = DocumentsContract.buildDocumentUriUsingTree(treeUri, DocumentsContract.getDocumentId(pickedDir.getUri()));
-            appendTextView(uuu.toString(), Color.RED);
-            File file = new File(uuu.getPath());
-            mApiChecker.check_write_file(file);*/
-
+            appendTextView("Trying to Create file in the chosen dir...", normal_heading);
+            {
+                boolean errorFlag = false;
+                // Create a new file and write into it
+                DocumentFile newFile = pickedDir.createFile("text/plain", "Sample File");
+                try {
+                    OutputStream out = getContentResolver().openOutputStream(newFile.getUri());
+                    out.write("A long time ago...".getBytes());
+                    out.close();
+                } catch (Exception e) {
+                    appendTextView(exceptionToString(e));
+                    errorFlag = true;
+                }
+                if(!errorFlag)
+                    appendTextView("File Successfully Created. Please tap the same button again and check the created file ");
+            }
         }
         else {
-            appendTextView("Result is not OK");
+            appendTextView("Result is not OK. Directory URI was not returned");
         }
     }
 
@@ -248,7 +250,7 @@ public class MainActivity extends ActionBarActivity {
         txtVw.setFreezesText(true);
         txtVw.setText(value);
 
-        if (color != Color.RED && !isTopic)
+        if (color == Color.BLUE)
             txtVw.append("\n");
         if(isTopic)
             txtVw.setBackgroundColor(Color.GRAY);

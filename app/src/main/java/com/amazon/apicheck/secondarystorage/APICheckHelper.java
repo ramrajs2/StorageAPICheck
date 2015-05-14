@@ -2,26 +2,15 @@ package com.amazon.apicheck.secondarystorage;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Environment;
-import android.text.Html;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 
 /**
  * This class just provides APIs to invoke the requested APIs
@@ -42,12 +31,12 @@ public class APICheckHelper {
     }
 
     public void check_getExternalStoragePublicDirectory() {
-        MainActivity.appendTextView("<for Pictures directory>", Color.RED);
+        MainActivity.appendTextView("<for Pictures directory>", Color.DKGRAY);
         MainActivity.appendTextView(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath());
     }
 
     public void check_getExternalStorageState() {
-        MainActivity.appendTextView(Environment.getExternalStorageState().toString());
+        MainActivity.appendTextView("Primary/Internal Storage : " + Environment.getExternalStorageState().toString());
     }
 
     public void check_isExternalStorageEmulated() {
@@ -63,7 +52,7 @@ public class APICheckHelper {
     }
 
     public void check_getExternalFilesDir() {
-        MainActivity.appendTextView("<for Documents directory>", Color.RED);
+        MainActivity.appendTextView("<for Documents directory>", Color.DKGRAY);
         MainActivity.appendTextView(mContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString());
     }
 
@@ -72,7 +61,7 @@ public class APICheckHelper {
         File files[] = mContext.getExternalFilesDirs(null);
         if (files != null)
             for (File file : files)
-                MainActivity.appendTextView(file.getAbsolutePath());
+                MainActivity.appendTextView((file!=null)?file.getAbsolutePath():"null");
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -80,7 +69,7 @@ public class APICheckHelper {
         File files[] = mContext.getExternalCacheDirs();
         if (files != null)
             for (File file : files)
-                MainActivity.appendTextView(file.getAbsolutePath());
+                MainActivity.appendTextView((file!=null)?file.getAbsolutePath():"null");
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -88,7 +77,7 @@ public class APICheckHelper {
         File files[] = mContext.getExternalMediaDirs();
         if (files != null)
             for (File file : files)
-                MainActivity.appendTextView(file.getAbsolutePath());
+                MainActivity.appendTextView((file!=null)?file.getAbsolutePath():"null");
     }
 
     public void check_getenv_sec_storage() {
@@ -100,8 +89,8 @@ public class APICheckHelper {
         MainActivity.appendTextView(Environment.getExternalStorageState(new File(System.getenv("SECONDARY_STORAGE"))));
     }
 
-    public void check_write_app_data_path() {
-        check_write_file(mContext.getExternalFilesDir(null));
+    public void check_write_to_app_data_path() {
+        check_write_file(mContext.getExternalFilesDir(null), true);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -125,7 +114,7 @@ public class APICheckHelper {
             int count = 1;
             for (File file : files) {
                 MainActivity.appendTextView("============" + count++ + "============");
-                check_write_file(file);
+                check_write_file(file, true);
             }
         }
     }
@@ -135,7 +124,7 @@ public class APICheckHelper {
         if (sec_path == null)
             MainActivity.appendTextView("SECONDARY_STORAGE path is null. Copy aborted.. ");
         else
-            check_write_file(new File(sec_path));
+            check_write_file(new File(sec_path), false);
     }
 
     public void check_write_to_pictures_path() {
@@ -143,20 +132,20 @@ public class APICheckHelper {
         if (sec_path == null)
             MainActivity.appendTextView("/sdcard/Pictures/ path is null. Copy aborted.. ");
         else
-            check_write_file(new File(sec_path));
+            check_write_file(new File(sec_path), true);
     }
 
-    public void check_write_file(File filepath) {
+    public void check_write_file(File filepath, boolean shouldPass) {
 
         InputStream is = null;
         OutputStream out = null;
         String filename = "sample.txt";
         try {
             if (filepath == null) {
-                MainActivity.appendTextView("Working Path: " + filepath);
+                MainActivity.appendTextView("Path: " + filepath);
                 return;
             }
-            MainActivity.appendTextView("Path: " + filepath.getAbsolutePath(), Color.BLACK);
+            MainActivity.appendTextView("Writing file to the path: \n" + filepath.getAbsolutePath(), Color.BLACK);
 
             File outFile = new File(filepath, filename);
             outFile.createNewFile();
@@ -174,11 +163,16 @@ public class APICheckHelper {
             bw.close();*/
 
             MainActivity.appendTextView(" >>>>>> Copied Successfully <<<<<", Color.rgb(0, 102, 51));
-            MainActivity.appendTextView("                      PASS!!!", Color.rgb(0, 102, 51));
+            MainActivity.appendTextView("\t\t\t\tTestcase Passed!!!", Color.rgb(0, 102, 51));
         } catch (Exception e) {
             MainActivity.appendTextView(" >>>>>> Copy Failed <<<<<< ", Color.RED);
             MainActivity.appendTextView(e.toString(), Color.RED);
-            MainActivity.appendTextView("                     FAIL!!!", Color.rgb(153, 0, 0));
+            if(shouldPass) {
+                MainActivity.appendTextView("\t\t\t\tTestcase Failed!!!", Color.rgb(153, 0, 0));
+            }
+            else    {
+                MainActivity.appendTextView("\n3P apps shouldn't have permission to write to this location\n\t\t\t\tTestcase Passed!!!", Color.rgb(0,102,51));
+            }
             e.printStackTrace();
         } finally {
             try {
