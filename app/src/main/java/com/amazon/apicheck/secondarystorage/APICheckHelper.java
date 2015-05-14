@@ -110,7 +110,7 @@ public class APICheckHelper {
         if (files == null) {
             MainActivity.appendTextView(apiName + "returned no paths.");
         } else {
-            MainActivity.appendTextView("Copying an image to " + apiName + " paths", Color.WHITE, true);
+            MainActivity.appendTextView("Write Check on " + apiName + " paths", Color.WHITE, true);
             int count = 1;
             for (File file : files) {
                 MainActivity.appendTextView("============" + count++ + "============");
@@ -145,7 +145,7 @@ public class APICheckHelper {
                 MainActivity.appendTextView("Path: " + filepath);
                 return;
             }
-            MainActivity.appendTextView("Writing file to the path: \n" + filepath.getAbsolutePath(), Color.rgb(0,102,102));
+            MainActivity.appendTextView("Writing file in the path: \n" + filepath.getAbsolutePath(), Color.rgb(0,102,102));
 
             File outFile = new File(filepath, filename);
             outFile.createNewFile();
