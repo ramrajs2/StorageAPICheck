@@ -6,9 +6,9 @@
     <!-- This section holds labels for buttons used in the application -->
     <string name="btn_label_check_all_apis">Secondary Storage API values</string>
     <string name="btn_copy_image">Write a file in app\'s path</string>
-    <string name="btn_copy_image_inaccessible_path">Write a file in Secondary Storage</string>
-    <string name="btn_action_open_document">Access a folder using Storage Access Fwk</string>
+    <string name="btn_copy_image_inaccessible_path">Write a file in Secondary Storage directory</string>
+    <string name="btn_action_open_document">Access a folder using Storage Access Framework(SAF)</string>
     <string name="btn_copy_to_pictures">Write a file in /sdcard/Pictures folder</string>
     <string name="btn_clear_results">Clear Results</string>
-    <string name="btn_copy_to_dirs">Write a file to Files/Cache/Media directories(secondary storage)</string>
+    <string name="btn_copy_to_dirs">Write a file to Files/Cache/Media directories (secondary storage)</string>
 </resources>

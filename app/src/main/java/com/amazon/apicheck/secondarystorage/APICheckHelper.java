@@ -145,7 +145,7 @@ public class APICheckHelper {
                 MainActivity.appendTextView("Path: " + filepath);
                 return;
             }
-            MainActivity.appendTextView("Writing file to the path: \n" + filepath.getAbsolutePath(), Color.BLACK);
+            MainActivity.appendTextView("Writing file to the path: \n" + filepath.getAbsolutePath(), Color.rgb(0,102,102));
 
             File outFile = new File(filepath, filename);
             outFile.createNewFile();

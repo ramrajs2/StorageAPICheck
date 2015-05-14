@@ -11,77 +11,89 @@
     android:background="@android:color/darker_gray"
     >
 
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/btn_label_check_all_apis"
-        android:id="@+id/btn_check_all_apis"
-        android:onClick="checkAllAPIs"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/btn_copy_image"
-        android:layout_toStartOf="@+id/btn_copy_image" />
+        android:orientation="horizontal"
+        android:id="@+id/ll_1">
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/btn_label_check_all_apis"
+            android:id="@+id/btn_check_all_apis"
+            android:onClick="checkAllAPIs" />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/btn_copy_image"
+            android:id="@+id/btn_copy_image"
+            android:onClick="copyFileFromAssetsToAppDataPath"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll_2"
+        android:orientation="horizontal"
+        android:layout_below="@+id/ll_1">
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/btn_copy_image_inaccessible_path"
+            android:id="@+id/btn_copy_to_invalid_path"
+            android:onClick="copyFileFromAssetsToInaccessiblePath"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/btn_action_open_document"
+            android:id="@+id/btn_action_open_document"
+            android:onClick="checkOpenDocumentAction"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll_3"
+        android:orientation="horizontal"
+        android:layout_below="@+id/ll_2">
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/btn_copy_to_dirs"
+            android:layout_weight="1"
+            android:id="@+id/btn_copy_to_dirs"
+            android:onClick="copyFiletoDirs" />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/btn_copy_to_pictures"
+            android:id="@+id/btn_copy_to_pictures_path"
+            android:onClick="copyFileFromAssetsToPicturesPath"/>
+    </LinearLayout>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_copy_image"
-        android:id="@+id/btn_copy_image"
-        android:onClick="copyFileFromAssetsToAppDataPath"
-        android:layout_alignTop="@+id/btn_check_all_apis"
-        android:layout_alignRight="@+id/scrl_main"
-        android:layout_alignEnd="@+id/scrl_main" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_copy_image_inaccessible_path"
-        android:id="@+id/btn_copy_to_invalid_path"
-        android:onClick="copyFileFromAssetsToInaccessiblePath"
-        android:layout_below="@+id/btn_check_all_apis"
-        android:layout_alignRight="@+id/scrl_main"
-        android:layout_alignEnd="@+id/scrl_main"
-        android:layout_alignLeft="@+id/btn_copy_image"
-        android:layout_alignStart="@+id/btn_copy_image" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_action_open_document"
-        android:id="@+id/btn_action_open_document"
-        android:onClick="checkOpenDocumentAction"
-        android:layout_alignBottom="@+id/btn_copy_to_invalid_path"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/btn_copy_to_invalid_path"
-        android:layout_toStartOf="@+id/btn_copy_to_invalid_path" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_copy_to_pictures"
-        android:id="@+id/btn_copy_to_pictures_path"
-        android:onClick="copyFileFromAssetsToPicturesPath"
-        android:layout_below="@+id/btn_copy_to_invalid_path"
-        android:layout_alignRight="@+id/scrl_main"
-        android:layout_alignEnd="@+id/scrl_main"
-        android:layout_alignLeft="@+id/btn_copy_to_invalid_path"
-        android:layout_alignStart="@+id/btn_copy_to_invalid_path" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:text="@string/btn_clear_results"
-        android:id="@+id/button"
+        android:id="@+id/clearbutton"
         android:onClick="clearResults"
-        android:layout_below="@+id/btn_copy_to_pictures_path"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_below="@+id/ll_3"/>
 
     <ScrollView
         android:id="@+id/scrl_main"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/button"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:background="#fffffeca">
+        android:background="#ffeee7ff"
+        android:layout_below="@+id/clearbutton">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -92,17 +104,14 @@
         </LinearLayout>
     </ScrollView>
 
-
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_copy_to_dirs"
-        android:id="@+id/btn_copy_to_dirs"
-        android:onClick="copyFiletoDirs"
-        android:layout_below="@+id/btn_copy_to_pictures_path"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignLeft="@+id/btn_copy_to_pictures_path"
-        android:layout_alignStart="@+id/btn_copy_to_pictures_path" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/textView"
+        android:layout_alignTop="@+id/clearbutton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
